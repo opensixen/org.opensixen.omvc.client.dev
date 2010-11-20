@@ -2,13 +2,19 @@ package org.opensixen.omvc.client.dev;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.security.PrivilegedAction;
 
+import javax.security.auth.Subject;
+import javax.security.auth.login.LoginException;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 import org.compiere.apps.AEnv;
 import org.compiere.util.Env;
+import org.opensixen.dev.omvc.swing.UpdateDialog;
+import org.opensixen.omvc.client.Updater;
+import org.opensixen.omvc.client.proxy.RemoteConsoleProxy;
 import org.opensixen.osgi.AbstractMenuAction;
 import org.opensixen.osgi.interfaces.IMenuAction;
 
@@ -30,11 +36,26 @@ public class CommitMenuAction  extends AbstractMenuAction implements IMenuAction
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		//CommitPanel panel = new CommitPanel(null, 0);
-		//panel.setVisible(true);
+		// Run app in secure context
+		try {
+			Subject.doAs(RemoteConsoleProxy.getLoginContext().getSubject(),
+					getRunAction());
+		} catch (LoginException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}		
 		
-		CommitDialog dialog = new CommitDialog(null);
-		dialog.setVisible(true);
 	}
+	
+	private PrivilegedAction getRunAction() {
+		return new PrivilegedAction() {
+			public Object run() {
+				CommitDialog dialog = new CommitDialog(null);
+				dialog.setVisible(true);
+				return null;
+			}
+		};
+	}
+	
 
 }

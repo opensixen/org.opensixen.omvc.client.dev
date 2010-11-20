@@ -16,6 +16,13 @@ public class Activator implements BundleActivator  {
 	// The shared instance
 	private static Activator plugin;
 	
+	private static BundleContext context;
+	
+	public static BundleContext getContext() {
+		return context;
+	}
+
+	
 	/**
 	 * The constructor
 	 */
@@ -29,6 +36,7 @@ public class Activator implements BundleActivator  {
 	 */
 	public void start(BundleContext context) throws Exception {		
 		plugin = this;
+		this.context = context;
 		
 		OSXServiceConnectionHandler handler = new OSXServiceConnectionHandler();
 		CentralizedIDGeneratorProxy.setServiceConnectionHandler(handler);		

@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.LayoutStyle;
 import javax.swing.SwingUtilities;
 
+import org.compiere.apps.ADialog;
 import org.compiere.dbPort.Convert;
 import org.compiere.swing.CButton;
 import org.compiere.swing.CComboBox;
@@ -239,7 +240,11 @@ public class CommitDialog extends CDialog {
 			}
 			
 			if (commit())	{
+				ADialog.info(0, this, "Las actualizaciones se han enviado correctamente.");
 				dispose();
+			}
+			else {
+				ADialog.error(0, this, "No se han podido enviar las actualizaciones. Consulte el log de errores.");
 			}
 		}
 		
