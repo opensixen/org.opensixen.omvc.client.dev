@@ -12,8 +12,6 @@ import javax.swing.JMenuItem;
 
 import org.compiere.apps.AEnv;
 import org.compiere.util.Env;
-import org.opensixen.dev.omvc.swing.UpdateDialog;
-import org.opensixen.omvc.client.Updater;
 import org.opensixen.omvc.client.proxy.RemoteConsoleProxy;
 import org.opensixen.osgi.AbstractMenuAction;
 import org.opensixen.osgi.interfaces.IMenuAction;
@@ -38,7 +36,7 @@ public class CommitMenuAction  extends AbstractMenuAction implements IMenuAction
 	public void actionPerformed(ActionEvent e) {
 		// Run app in secure context
 		try {
-			Subject.doAs(RemoteConsoleProxy.getLoginContext().getSubject(),
+			Subject.doAs(RemoteConsoleProxy.getInstance().getLoginContext().getSubject(),
 					getRunAction());
 		} catch (LoginException ex) {
 			// TODO Auto-generated catch block

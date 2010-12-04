@@ -1,7 +1,5 @@
 package org.opensixen.omvc.client.dev;
 
-import org.opensixen.dev.omvc.OSXServiceConnectionHandler;
-import org.opensixen.omvc.client.dev.proxy.CentralizedIDGeneratorProxy;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
@@ -37,9 +35,6 @@ public class Activator implements BundleActivator  {
 	public void start(BundleContext context) throws Exception {		
 		plugin = this;
 		this.context = context;
-		
-		OSXServiceConnectionHandler handler = new OSXServiceConnectionHandler();
-		CentralizedIDGeneratorProxy.setServiceConnectionHandler(handler);		
 	}
 
 	/*

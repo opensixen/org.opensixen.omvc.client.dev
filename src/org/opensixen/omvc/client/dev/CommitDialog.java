@@ -5,8 +5,6 @@ import java.awt.event.ActionEvent;
 import java.util.logging.Level;
 
 import javax.swing.BorderFactory;
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -28,7 +26,6 @@ import org.compiere.swing.CTextArea;
 import org.compiere.util.CLogger;
 import org.compiere.util.Env;
 import org.compiere.util.Msg;
-import org.opensixen.dev.omvc.Activator;
 import org.opensixen.dev.omvc.model.Revision;
 import org.opensixen.dev.omvc.model.Script;
 
@@ -38,6 +35,7 @@ import org.opensixen.model.POFactory;
 import org.opensixen.model.QParam;
 import org.opensixen.omvc.client.Updater;
 import org.opensixen.omvc.client.model.ProjectComboBoxModel;
+import org.opensixen.omvc.client.model.ScriptException;
 import org.opensixen.omvc.client.proxy.RemoteConsoleProxy;
 
 /**
@@ -234,8 +232,11 @@ public class CommitDialog extends CDialog {
 		if (e.getSource().equals(bOk))	{
 			// Antes de hacer commit, hay que actualizarse
 			Updater updater = new Updater();
-			if (!updater.update())	{
-				log.severe("No se puede actualiar a la ultima revision antes de enviar nada.");
+			try {
+				updater.update();
+			}
+			catch (ScriptException ex)	{
+				ADialog.error(0, this, "No se puede actualiar a la ultima revision antes de enviar nada." + ex.getMessage() + ex.getCause());
 				return;
 			}
 			
@@ -262,7 +263,7 @@ public class CommitDialog extends CDialog {
 		
 		RemoteConsoleProxy console = RemoteConsoleProxy.getInstance();
 		
-		Script pgScript = Script.getScript(Script.ENGINE_POSTGRESQL, Convert.getPgFileName());
+		Script pgScript = Script.getScript(Script.ENGINE_POSTGRESQL, Script.TYPE_OSX, Convert.getPgFileName());
 		if (pgScript == null)	{
 			MSG_STATUS = "No se encuentra el script para PostgreSQL.";
 			log.severe(MSG_STATUS);
@@ -270,7 +271,7 @@ public class CommitDialog extends CDialog {
 		}
 		rev.addScript(pgScript);
 		
-		Script oraScript = Script.getScript(Script.ENGINE_ORACLE, Convert.getOrFileName());
+		Script oraScript = Script.getScript(Script.ENGINE_ORACLE, Script.TYPE_OSX, Convert.getOrFileName());
 		if (oraScript == null)	{
 			MSG_STATUS = "No se encuentra el script para Oracle.";
 			log.severe(MSG_STATUS);

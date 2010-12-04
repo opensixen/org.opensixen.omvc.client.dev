@@ -44,10 +44,20 @@ public class CentralizedIDGeneratorProxy extends AbstractProxy<IRemoteCentralize
 	}
 	
 	
-	public CentralizedIDGeneratorProxy() {
+	private CentralizedIDGeneratorProxy() {
 		super();
+	}
+	
+	
+
+	/* (non-Javadoc)
+	 * @see org.opensixen.riena.client.proxy.AbstractProxy#afterRegister()
+	 */
+	@Override
+	protected void afterRegister() {
 		generator = getService();
 	}
+
 
 	/* (non-Javadoc)
 	 * @see org.opensixen.riena.client.proxy.AbstractProxy#getServicePath()

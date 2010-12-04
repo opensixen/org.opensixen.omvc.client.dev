@@ -21,5 +21,12 @@
             class="org.opensixen.omvc.client.dev.CommitMenuAction">
       </client>
    </extension>
+   <extension
+         id="org.opensixen.omvc.client.dev.StartupModelValidator"
+         point="org.opensixen.osgi.interfaces.IModelValidator">
+      <validator
+            class="org.opensixen.omvc.client.dev.StartupModelValidator">
+      </validator>
+   </extension>
 
 </plugin>
