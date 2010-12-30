@@ -61,7 +61,10 @@
 
 package org.opensixen.omvc.client.dev;
 import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.util.logging.Level;
 
@@ -77,6 +80,7 @@ import javax.swing.LayoutStyle;
 import javax.swing.SwingUtilities;
 
 import org.compiere.apps.ADialog;
+import org.compiere.apps.ConfirmPanel;
 import org.compiere.dbPort.Convert;
 import org.compiere.swing.CButton;
 import org.compiere.swing.CComboBox;
@@ -113,15 +117,20 @@ import org.opensixen.omvc.client.proxy.RemoteConsoleProxy;
 */
 public class CommitDialog extends CDialog {
 
-	private JPanel jPanel1;
+
 	private JButton bOk;
 	private JButton bCancel;
-	private CComboBox cComboBox1;
+	private CComboBox fProject;
 	private JLabel lProject;
 	private CTextArea fDescription;
 	private JLabel lDescription;
 	private JPanel mainPane;
 	private JLabel lHeader;
+	
+	//Paneles
+	private CPanel centerPanel;
+	private CPanel mainPanel;
+	private ConfirmPanel confirm = new ConfirmPanel(true);
 	
 	//private IRevisionUploader uploader;
 	
@@ -156,102 +165,45 @@ public class CommitDialog extends CDialog {
 	}
 		
 	private void initGUI() {
-		try {
-			{
-				BorderLayout thisLayout = new BorderLayout();
-				getContentPane().setLayout(thisLayout);
-				{
-					jPanel1 = new JPanel();
-					getContentPane().add(jPanel1, BorderLayout.NORTH);
-					{
-						lHeader = new JLabel();
-						jPanel1.add(lHeader);
-						lHeader.setText("Enviar revision al servidor");
-						lHeader.setFont(new java.awt.Font("Dialog",1,14));
-					}
-				}
-				{
-					mainPane = new JPanel();
-					getContentPane().add(mainPane, BorderLayout.CENTER);
-					GroupLayout mainPaneLayout = new GroupLayout((JComponent)mainPane);
-					mainPane.setLayout(mainPaneLayout);
-					mainPane.setPreferredSize(new java.awt.Dimension(378, 245));
-					//START >>  lDescription
-					lDescription = new JLabel();
-					lDescription.setText("Desciption");
-					lDescription.setBounds(70, 42, 70, 14);
-					//END <<  lDescription
-					//START >>  fDescription
-					fDescription = new CTextArea();
-					fDescription.setBounds(182, 14, 147, 70);
-					//END <<  fDescription
-					//START >>  lProject
-					lProject = new JLabel();
-					lProject.setText("Project");
-					lProject.setBounds(84, 98, 49, 14);
-					//END <<  lProject
-					//START >>  cComboBox1
-					model = new ProjectComboBoxModel();
-					cComboBox1 = new CComboBox(model);
-					cComboBox1.setBounds(182, 105, 77, 21);
-					//END <<  cComboBox1
-					//START >>  bCancel
-					bCancel = new JButton();
-					bCancel.addActionListener(this);
-					bCancel.setText("Cancel");
-					//END <<  bCancel
-					//START >>  bOk
-					bOk = new JButton();
-					bOk.addActionListener(this);
-					bOk.setText("Ok");
-					//END <<  bOk
-					mainPaneLayout.setHorizontalGroup(mainPaneLayout.createSequentialGroup()
-						.addContainerGap(33, 33)
-						.addGroup(mainPaneLayout.createParallelGroup()
-						    .addComponent(lDescription, GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
-						    .addGroup(GroupLayout.Alignment.LEADING, mainPaneLayout.createSequentialGroup()
-						        .addGap(21)
-						        .addComponent(lProject, GroupLayout.PREFERRED_SIZE, 49, GroupLayout.PREFERRED_SIZE)))
-						.addGap(35)
-						.addGroup(mainPaneLayout.createParallelGroup()
-						    .addGroup(mainPaneLayout.createSequentialGroup()
-						        .addComponent(fDescription, GroupLayout.PREFERRED_SIZE, 217, GroupLayout.PREFERRED_SIZE)
-						        .addGap(0, 0, Short.MAX_VALUE))
-						    .addGroup(GroupLayout.Alignment.LEADING, mainPaneLayout.createSequentialGroup()
-						        .addGroup(mainPaneLayout.createParallelGroup()
-						            .addGroup(GroupLayout.Alignment.LEADING, mainPaneLayout.createSequentialGroup()
-						                .addGap(0, 58, Short.MAX_VALUE)
-						                .addComponent(bOk, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE))
-						            .addGroup(GroupLayout.Alignment.LEADING, mainPaneLayout.createSequentialGroup()
-						                .addComponent(cComboBox1, GroupLayout.PREFERRED_SIZE, 77, GroupLayout.PREFERRED_SIZE)
-						                .addGap(51)))
-						        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-						        .addComponent(bCancel, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
-						        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 0, GroupLayout.PREFERRED_SIZE)))
-						.addContainerGap(39, 39));
-					mainPaneLayout.setVerticalGroup(mainPaneLayout.createSequentialGroup()
-						.addContainerGap()
-						.addGroup(mainPaneLayout.createParallelGroup()
-						    .addComponent(fDescription, GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 84, GroupLayout.PREFERRED_SIZE)
-						    .addGroup(GroupLayout.Alignment.LEADING, mainPaneLayout.createSequentialGroup()
-						        .addGap(26)
-						        .addComponent(lDescription, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE)
-						        .addGap(44)))
-						.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-						.addGroup(mainPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-						    .addComponent(cComboBox1, GroupLayout.Alignment.BASELINE, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
-						    .addComponent(lProject, GroupLayout.Alignment.BASELINE, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE))
-						.addGap(31)
-						.addGroup(mainPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-						    .addComponent(bCancel, GroupLayout.Alignment.BASELINE, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
-						    .addComponent(bOk, GroupLayout.Alignment.BASELINE, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE))
-						.addContainerGap(24, 24));
-				}
-			}
-			this.setSize(400, 250);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		
+		centerPanel = new CPanel();
+		centerPanel.setLayout(new GridBagLayout());
+		
+		mainPanel = new CPanel();
+		mainPanel.setLayout(new BorderLayout());
+		
+		mainPanel.add(centerPanel,BorderLayout.CENTER);
+		mainPanel.add(confirm,BorderLayout.SOUTH);
+		this.getContentPane().add(mainPanel);
+		
+		//Cabecera
+		lHeader = new CLabel();
+		lHeader.setText(Msg.getMsg(Env.getCtx(), "Send Revision To Server"));
+		lHeader.setFont(new java.awt.Font("Dialog",1,14));
+		
+		//Proyecto
+		model = new ProjectComboBoxModel();
+		fProject = new CComboBox(model);
+		
+		lProject = new CLabel();
+		lProject.setText(Msg.translate(Env.getCtx(), "Project"));
+		lProject.setLabelFor(fProject);
+		
+		//Descripcion
+		fDescription = new CTextArea();
+		lDescription = new CLabel();
+		lDescription.setText(Msg.translate(Env.getCtx(), "Description"));
+		lDescription.setLabelFor(fDescription);
+		
+		centerPanel.add( lHeader,new GridBagConstraints( 1,0,1,1,0.0,0.0,GridBagConstraints.CENTER,GridBagConstraints.NONE,new Insets( 2,2,10,20 ),0,0 ));
+		
+		centerPanel.add( lProject,new GridBagConstraints( 0,1,1,1,0.0,0.0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets( 2,2,2,2 ),0,0 ));
+		centerPanel.add( fProject,new GridBagConstraints( 1,1,1,1,0.3,0.0,GridBagConstraints.WEST,GridBagConstraints.BOTH,new Insets( 2,2,2,2 ),0,0 ));	
+		centerPanel.add( lDescription,new GridBagConstraints( 0,2,1,1,0.0,0.0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets( 20,2,2,2 ),0,0 ));
+		centerPanel.add( fDescription,new GridBagConstraints( 1,2,GridBagConstraints.RELATIVE,GridBagConstraints.RELATIVE,1.0,1.0,GridBagConstraints.WEST,GridBagConstraints.BOTH,new Insets( 20,2,2,10 ),0,0 ));
+
+		confirm.addActionListener(this);
+		this.setSize(400, 250);
 	}
 
 	
@@ -286,11 +238,11 @@ public class CommitDialog extends CDialog {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource().equals(bCancel))	{
+		if (e.getActionCommand().equals(ConfirmPanel.A_CANCEL))	{
 			dispose();
 		}
 		
-		if (e.getSource().equals(bOk))	{
+		if (e.getActionCommand().equals(ConfirmPanel.A_OK))	{
 			// Antes de hacer commit, hay que actualizarse
 			Updater updater = new Updater();
 			try {
